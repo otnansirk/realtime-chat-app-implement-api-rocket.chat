@@ -22,7 +22,7 @@ import { messageUi } from '../ui/messages.js'
         var ws = initSocket();
 
         const roomId     = getState('roomId')
-        const messagText = document.getElementById('message-text').value
+        const messagText = document.getElementById('message-text')
 
         ws.onopen = function() {
 
@@ -71,11 +71,12 @@ import { messageUi } from '../ui/messages.js'
                     {
                         "_id": generateHash(17),
                         "rid": roomId,
-                        "msg": messagText,
+                        "msg": messagText.value,
                         "token": getState('token')
                     }
                 ]
             }));
+            messagText.value = ''
 
         }
      
