@@ -4,10 +4,6 @@ import { messageUi } from '../ui/messages.js'
 
 (() => {
     const btnSendMessage = document.getElementById('btn-send-msg')
-    
-    let messagesCount  = 1
-    let isSubcribeRoom = false
-    
 
     function sendMessageHandler(){
         if (!getState('token')) {
@@ -43,25 +39,6 @@ import { messageUi } from '../ui/messages.js'
                 ]
             }
             ws.send(JSON.stringify(loginRequest));  
-            
-            if (!isSubcribeRoom) {
-                const subcribeRoom = {
-                    "msg"  : "sub",
-                    "id"   : generateHash(17),
-                    "name" : "stream-room-messages",
-                    "params" : [
-                        roomId,
-                        {
-                            useCollection: false,
-                            args: [{
-                                visitorToken: getState('token')
-                            }]
-                        }
-                    ]
-                }
-                ws.send(JSON.stringify(subcribeRoom));
-                isSubcribeRoom=true
-            }
 
             ws.send(JSON.stringify({
                 "msg": "method",
