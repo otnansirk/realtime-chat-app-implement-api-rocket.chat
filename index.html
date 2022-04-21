@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+
+<html>
+   <head>
+      <link rel="stylesheet" href="./style/main.css"></link>
+   </head>
+
+   <body>
+
+      <fieldset class="bg-primary">
+         <legend class="title-primary">Login</legend>
+         <!-- <input id="username" name="username" class="input-control" placeholder="Username"/>
+         <input id="password" name="password" class="input-control" placeholder="Password"/>
+         <strong>OR</strong> -->
+         <input  id="token" name="token" class="input-control" placeholder="Token"/>
+         <button id="btn-login" class="btn btn-primary">Login</button>
+      </fieldset>
+      
+      <div class="spliter"/>
+
+      <fieldset class="bg-primary">
+         <legend class="title-primary">Listen Room</legend>
+         <div class="form">
+            <input name="msg" id="room-id" class="input-control" placeholder="Room Id"/><br><br>
+            <button id="btn-listen-room" class="btn-primary">Enter the Room</button>
+         </div>
+      </fieldset>
+      
+      <div class="spliter"/>
+
+      <fieldset class="bg-primary">
+         <legend class="title-primary">Send Message</legend>
+         <div class="form">
+            <textarea name="msg" id="message-text" class="textarea input-control" placeholder="Message"></textarea><br>
+            <button id="btn-send-msg" class="btn-primary">Send</button>
+         </div>
+      </fieldset>
+
+      <div class="spliter"/>
+
+      <div id="messages" class="messages">
+         <h2>
+            <i id="my-username"></i>
+            Messages
+         </h2>
+      </div>
+   
+      <script type="module" src="/main.js"></script>
+   </body>
+
+</html>
