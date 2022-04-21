@@ -1,5 +1,7 @@
 # REALTIME CHAT WITH API ROCKET CHAT
 
+Fork this project and clone to your local machine
+
 ## Config
 Update editable config in file `config/config.example.js` and rename to `config/config.js`
 
