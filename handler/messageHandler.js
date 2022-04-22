@@ -1,10 +1,9 @@
 import { initSocket, generateHash } from '../config/config.js'
 import { getState } from '../store/state.js'
-import { messageUi } from '../ui/messages.js'
 
 (() => {
     const btnSendMessage = document.getElementById('btn-send-msg')
-
+    
     function sendMessageHandler(){
         if (!getState('token')) {
             alert('Error !!! You must be sign in')
@@ -16,7 +15,6 @@ import { messageUi } from '../ui/messages.js'
         }
 
         var ws = initSocket();
-
         const roomId     = getState('roomId')
         const messagText = document.getElementById('message-text')
 
@@ -39,7 +37,8 @@ import { messageUi } from '../ui/messages.js'
                 ]
             }
             ws.send(JSON.stringify(loginRequest));  
-
+            
+            onTyping(false)
             ws.send(JSON.stringify({
                 "msg": "method",
                 "method": "sendMessage",
@@ -59,5 +58,51 @@ import { messageUi } from '../ui/messages.js'
      
     }
 
+    const onTyping = (isTyping = true) => {
+        const roomId     = getState('roomId')
+        var ws = initSocket();
+        ws.onopen = function() {
+
+            ws.send(JSON.stringify({
+                "msg"     : "connect",
+                "version" : "1",
+                "support" : ["1"]
+            }));
+
+            var loginRequest = {
+                "msg": "method",
+                "method": "login",
+                "id": generateHash(17),
+                "params": [
+                    { 
+                        "resume": getState('token') 
+                    }
+                ]
+            }
+            ws.send(JSON.stringify(loginRequest));  
+
+            ws.send(JSON.stringify({
+                "msg": "method",
+                "method": "stream-notify-room",
+                "id": generateHash(17),
+                "params": [
+                    `${roomId}/typing`,
+                    getState('user').username,
+                    isTyping
+                ]
+            }));
+        }
+    }
+    
+    let typingTimer;
+    let noLongerTypingTime = 2000;
+    const onKeyUp = (e) => {
+        clearTimeout(typingTimer)
+        typingTimer = setTimeout(() => onTyping(false), noLongerTypingTime )
+    }
+
+    const messagText = document.getElementById('message-text')
     btnSendMessage.addEventListener('click', sendMessageHandler)
+    messagText.addEventListener('keyup', onKeyUp, false)
+    messagText.addEventListener('keydown', () => onTyping(true), false)
 })()

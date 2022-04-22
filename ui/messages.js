@@ -7,3 +7,10 @@ export const messageUi = (message, count) => {
  
     messagesBox.append(newElement)
 }
+
+export const onTypingUi = (username, isTyping = true) => {
+    const typingIndicator = document.getElementById('typing-indicator')
+    typingIndicator.innerHTML = isTyping ?
+                                    `<span class="msg-text typing">${username} is typing...</span>`
+                                    :''
+    }

@@ -45,3 +45,6 @@
 .msg-text.odd {
     background: #d7e0ff;
 }
+.msg-text.typing {
+    background: #ffffd7;
+}

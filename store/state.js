@@ -1,6 +1,7 @@
 let state = {
     token: '',
-    roomId: ''
+    roomId: '',
+    user: {}
 }
 
 export const setToken = (token) => {
@@ -11,6 +12,11 @@ export const setToken = (token) => {
 export const setRoomId = (roomId) => {
     state = {...state, roomId: roomId}
     return roomId
+}
+
+export const setUser = (user) => {
+    state = {...state, user: user}
+    return user
 }
 
 export const getState = (key) => {

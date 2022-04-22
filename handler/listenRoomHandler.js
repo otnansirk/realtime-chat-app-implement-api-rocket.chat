@@ -1,6 +1,6 @@
 import { generateHash, initSocket } from "../config/config.js";
-import { getState, setRoomId } from "../store/state.js";
-import { messageUi } from "../ui/messages.js";
+import { getState, setRoomId, setUser } from "../store/state.js";
+import { messageUi, onTypingUi } from "../ui/messages.js";
 import { profileUi } from "../ui/profile.js";
 
 (() => {
@@ -56,26 +56,49 @@ import { profileUi } from "../ui/profile.js";
                     ]
                 }
                 ws.send(JSON.stringify(subcribeRoom));
+
+                const subcribeNotifyRoom = {
+                    "msg"  : "sub",
+                    "id"   : generateHash(17),
+                    "name" : "stream-notify-room",
+                    "params" : [
+                        `${roomId}/typing`,
+                        false
+                    ]
+                }
+                ws.send(JSON.stringify(subcribeNotifyRoom));
+
                 isSubcribeRoom=true
             }
         }
 
         ws.onmessage = function (evnt) {
             let response = JSON.parse(evnt.data);
-
             if (response.msg === 'result' && response?.error) {
                 alert(`Error !!! ${response?.error.message}`)
                 return
             }
 
             if (response.msg === 'changed') {
-                const msgRes  = response.fields.args[0]
-                messageUi(msgRes, messagesCount)
-                messagesCount++
+                if (response.collection == 'stream-room-messages') {
+                    const msgRes  = response.fields.args[0]
+                    messageUi(msgRes, messagesCount)
+                    messagesCount++
+                }
+                if (response.collection == 'stream-notify-room') {
+                    const username  = response.fields.args[0]
+                    const isTyping  = response.fields.args[1]
+                    if (username !== getState('user').username) {
+                        onTypingUi(username, isTyping)
+                    }
+                }
             }
             if (response.msg === 'added') {
-                const username  = response.fields.username
-                profileUi(username)
+                if (response.collection == 'users') {
+                    const username  = response.fields.username
+                    setUser(response.fields)
+                    profileUi(username)
+                }
             }
 
             if (response.msg == 'ping') {
